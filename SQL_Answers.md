@@ -536,35 +536,119 @@
 > where mail regexp '^[a-zA-Z][a-zA-Z0-9_./-]*@leetcode.com$'
 
 ---
-> 53. User Activity for the Past 30 Days I
+> 53. Patients With a Condition
 > ``` MySQL
+> select * 
+> from patients 
+> where conditions like 'DIAB1%' or conditions like '% DIAB1%'
 
 ---
-> 54. User Activity for the Past 30 Days I
+> 54. Fix Product Name Format
 > ``` MySQL
+> with t as (
+> select sale_id, lower(trim(product_name)) as product_name, date_format(sale_date, "%Y-%m") as sale_date
+> from sales)
+> select product_name, sale_date, count(sale_id) as total
+> from t
+> group by 1,2
+> order by product_name, sale_date
 
 ---
-> 55. User Activity for the Past 30 Days I
+> 55. Unique Orders and Customers Per Month
 > ``` MySQL
+> select DATE_FORMAT(order_date,'%Y-%m') as month, count(distinct order_id) as order_count,count(distinct customer_id) as customer_count
+> from orders
+> where invoice > 20
+> group by 1
 
 ---
-> 56. User Activity for the Past 30 Days I
+> 56. Warehouse Manager
 > ``` MySQL
+> select name as warehouse_name, sum(width*length*height*units) as volume
+> from warehouse
+> join products using(product_id)
+> group by name
 
 ---
-> 57. User Activity for the Past 30 Days I
+> 57. Customer Who Visited but Did Not Make Any Transactions
 > ``` MySQL
+> select customer_id, count(customer_id) as count_no_trans
+> from visits v
+> left join transactions t
+> using(visit_id)
+> where transaction_id is null 
+> group by customer_id
 
 ---
-> 58. User Activity for the Past 30 Days I
+> 58. Bank Account Summary II
 > ``` MySQL
+> with t as(
+> select account, sum(amount) as balance
+> from transactions
+> group by account
+> having balance > 10000
+> )
+> select name, balance
+> from users
+> join t using(account)
 
 ---
-> 59. User Activity for the Past 30 Days I
+> 59. Sellers With No Sales
 > ``` MySQL
+> select seller_name
+> from seller
+> where seller_id not in (select distinct seller_id
+> from orders
+> where sale_date regexp '^2020')
+> order by seller_name 
 
 ---
-> 60. User Activity for the Past 30 Days I
+> 60. All Valid Triplets That Can Represent a Country
 > ``` MySQL
+> select *
+> from schoola 
+> cross join schoolb 
+> cross join schoolc
 
+---
+> 61. Percentage of Users Attended a Contest
+> ``` MySQL
+> select contest_id, round(count(distinct user_id) * 100 / (select count(distinct user_id) from users), 2)as percentage
+> from register 
+> group by contest_id
+> order by percentage desc, contest_id asc
+
+---
+> 62. Average Time of Process per Machine
+> ``` MySQL
+> with st as(select * from activity where activity_type = 'start'),
+> et as( select * from activity where activity_type = 'end')
+> select machine_id, round(sum(et.timestamp - st.timestamp) / count(st.machine_id), 3) as processing_time
+> from st
+> join et using(machine_id, process_id)
+> group by machine_id
+
+---
+> 63. Fix Names in a Table
+> ``` MySQL
+> select user_id, concat(upper(substring(name, 1, 1)), '', lower(substring(name, 2, length(name)-1))) as name
+> from users
+> order by user_id
+
+
+---
+> 64. Product's Worth Over Invoices
+> ``` MySQL
+> select name, sum(rest) as rest, sum(paid) as paid, sum(canceled) as canceled, sum(refunded) as refunded 
+> from product
+> join invoice using(product_id)
+> group by product_id
+> order by name
+
+---
+> 65. Invalid Tweets 
+> ``` MySQL
+> select tweet_id
+> from tweets
+> where length(content) > 15
 
