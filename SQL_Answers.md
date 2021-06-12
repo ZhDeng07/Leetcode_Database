@@ -652,3 +652,26 @@
 > from tweets
 > where length(content) > 15
 
+--- 
+> 66. Daily Leads and Partners
+> ``` MySQL
+> select date_id, make_name, count(distinct lead_id) as unique_leads, count(distinct partner_id) as unique_partners
+> from dailysales
+> group by 1,2
+
+--- 
+> 67. Find Followers Count
+> ``` MySQL
+> select distinct user_id, count(follower_id) as followers_count
+> from followers
+> group by 1
+> order by user_id
+
+--- 
+> 68. The Number of Employees Which Report to Each Employee
+> ``` MySQL
+> select e1.reports_to as employee_id, e2.name, count(e1.name) as reports_count, round(avg(e1.age),0) as average_age
+> from employees e1, employees e2 
+> where e1.reports_to = e2.employee_id
+> group by 1,2
+> order by 1,2
