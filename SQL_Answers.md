@@ -675,3 +675,52 @@
 > where e1.reports_to = e2.employee_id
 > group by 1,2
 > order by 1,2
+
+--- 
+> 69. Find Total Time Spent by Each Employee
+> ``` MySQL
+> select event_day as day, emp_id, sum(out_time - in_time) as total_time
+> from employees
+> group by 1,2 
+
+--- 
+> 70. Recyclable and Low Fat Products
+> ``` MySQL
+> select product_id 
+> from products
+> where low_fats = 'Y' and recyclable = 'Y'
+
+--- 
+> 71. Product's Price for Each Store
+> ``` MySQL
+> select product_id, 
+>     sum(case when store = 'store1' then price end) as store1,
+>     sum(case when store = 'store2' then price end) as store2,
+>     sum(case when store = 'store3' then price end) as store3
+> from products
+> group by 1
+
+--- 
+> 72. Primary Department for Each Employee
+> ``` MySQL
+> with t as(select *, rank() over(partition by employee_id order by primary_flag) as prime
+> from employee)
+> select employee_id, department_id
+> from t 
+> where prime = 1
+
+--- 
+> 73. 
+> ``` MySQL
+> select *
+> from(
+> select product_id, 'store1' as store, store1 as price
+> from products where store1 is not null
+> union 
+> select product_id, 'store2' as store, store2 as price
+> from products where store2 is not null
+> union
+> select product_id, 'store3' as store, store3 as price
+> from products where store3 is not null
+> ) as t
+> order by 1
