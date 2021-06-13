@@ -710,7 +710,7 @@
 > where prime = 1
 
 --- 
-> 73. 
+> 73. Rearrange Products Table
 > ``` MySQL
 > select *
 > from(
@@ -724,3 +724,56 @@
 > from products where store3 is not null
 > ) as t
 > order by 1
+
+--- 
+> 74. Ad-Free Sessions
+> ``` MySQL
+> select session_id
+> from playback
+> where session_id not in (select distinct session_id
+> from playback as p, ads as a
+> where p.customer_id = a.customer_id 
+> and a.timestamp between p.start_time and p.end_time)
+
+--- 
+> 75. Find Customers With Positive Revenue this Year
+> ``` MySQL
+> select customer_id
+> from customers
+> where year = '2021' and revenue > 0
+
+--- 
+> 76. Convert Date Format
+> ``` MySQL
+> select date_format(day, "%W, %M %e, %Y") as day
+> from days
+
+--- 
+> 77. Calculate Special Bonus
+> ``` MySQL
+> select employee_id, 
+>     case 
+>         when mod(employee_id, 2)  != 0 and name not like 'M%' then salary
+>         else 0
+>     end as bonus
+> from employees
+
+--- 
+> 78. The Latest Login in 2020
+> ``` MySQL
+> -- Window function solution:
+> select user_id, time_stamp as last_stamp
+> from(
+> select user_id, 
+>     rank () over(partition by user_id order by time_stamp desc) as rankn,
+>     time_stamp
+> from logins
+> where time_stamp regexp '^2020'
+> ) as t 
+> where rankn = 1
+>   
+> -- Group by solution
+> select user_id, max(time_stamp) as last_stamp
+> from logins
+> where time_stamp regexp '^2020'
+> group by 1
