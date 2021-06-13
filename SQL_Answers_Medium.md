@@ -12,7 +12,7 @@
 > return(
 >    select ifnull((select distinct salary from employee order by salary desc limit N,1),null)
 >  );
-> End
+> end
 >
 > -- window function solution:
 > create function getNthHighestSalary(N int)
