@@ -28,3 +28,25 @@
 >     where rn = N
 > );
 > end
+
+> 2. Rank Scores
+> ``` MySQL
+> select score as 'Score', dense_rank() over(order by Score desc) as 'Rank' #
+> from Scores
+> order by 'Rank' asc
+
+> 3. Consecutive Numbers
+> ``` MySQL
+> with t as(
+> select 
+> lag(num, 1) over(order by id) as num1,
+> num, 
+> lead(num, 1) over(order by id) as num2
+> from logs
+> )
+> select distinct num as ConsecutiveNums
+> from t
+> where num1=num2 and num=num1
+
+
+
