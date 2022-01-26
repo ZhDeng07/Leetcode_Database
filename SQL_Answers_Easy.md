@@ -283,11 +283,16 @@
 ---
 > 30. Sales Analysis III
 > ``` MySQL
-> select p.product_id, p.product_name
-> from product p 
-> join sales using(product_id)
-> where sale_date between '2019-01-01' and '2019-03-31'  and product_id not in (select
->             distinct product_id from sales where sale_date not between '2019-01-01' and '2019-03-31')
+> SELECT 
+> p.product_id,
+> p.product_name 
+> FROM product p
+> WHERE p.product_id not in
+> (
+> SELECT product_id 
+> FROM sales
+> WHERE sale_date > '2019-03-31' OR sale_date < '2019-01-01' # spring time sales are inclusive
+> )
 
 ---
 > 31. Reported Posts
